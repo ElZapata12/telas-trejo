@@ -1,0 +1,22 @@
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# Python / Django
+__pycache__/
+*.pyc
+.venv/
+venv/
+db.sqlite3
+staticfiles/
+
+# Variables de entorno (nunca subir secretos)
+.env
+.env.*
+!.env.example
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
