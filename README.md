@@ -69,18 +69,7 @@ git switch develop
 
 `develop` es la rama predeterminada: ahí se junta el trabajo de los tres.
 
-### 5. Instala el hook de commits del equipo
-
-El hook revisa que cada commit salga con **tu** identidad y que en GitHub solo aparezcan los integrantes. Desde la carpeta `telas-trejo`:
-
-```bash
-cp "../Telas Trejo/Scripts/git-hooks/commit-msg" .git/hooks/commit-msg
-chmod +x .git/hooks/commit-msg
-```
-
-Si tu vault está en otra carpeta, cambia la ruta `../Telas Trejo`.
-
-### 6. Sube una rama de prueba
+### 5. Sube una rama de prueba
 
 Así comprobamos que tienes permisos (lo pide el issue #1):
 
@@ -275,7 +264,6 @@ Abre <http://localhost:4200>. Necesitas el backend corriendo para ver datos.
 |---|---|---|
 | `Permission denied` o `403` al hacer push | No aceptaste la invitación | Acepta la invitación (Parte 1, paso 2) |
 | `protected branch` al hacer push | Intentaste subir directo a `develop` o `main` | Crea tu rama `feature/...` y abre un Pull Request |
-| `Commit bloqueado` | El hook encontró una identidad o mensaje que no es del equipo | Lee el mensaje del hook, corrige tu identidad o tu mensaje y repite el commit |
 | `hint: Updates were rejected` | Tu rama local está atrasada | `git pull` y luego `git push` |
 | Mis commits no salen con mi foto en GitHub | El correo de Git no es el de tu cuenta | Revisa la Parte 1, paso 3 |
 | Empecé a trabajar en `develop` por error | Aún no hiciste commit | `git switch -c feature/NN-nombre` (tus cambios se van contigo a la rama nueva) |
