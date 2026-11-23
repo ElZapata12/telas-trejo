@@ -211,8 +211,6 @@ Cambios pequeños ya acordados en archivos ajenos: `provideHttpClient()` (#10) y
 
 ## Correr el proyecto en tu computadora
 
-> Las carpetas `frontend/` y `backend/` se crean en los issues #2 y #3. Hasta que se fusionen en `develop`, esta parte todavía no aplica.
-
 ### Backend (Django)
 
 Desde `telas-trejo/backend`:
@@ -235,6 +233,25 @@ python manage.py runserver
 - En tu computadora se usa SQLite: no necesitas la base de Neon.
 - Cada vez que hagas `git pull` y cambien los modelos, vuelve a correr `python manage.py migrate`.
 - Si alguien agrega un paquete, vuelve a correr `pip install -r requirements.txt`.
+
+#### Variables de entorno del backend
+
+Todas son opcionales en tu computadora (hay valores de desarrollo). En Render se ponen reales. Los nombres están en `backend/.env.example`.
+
+| Variable | Para qué sirve | Por defecto |
+|---|---|---|
+| `SECRET_KEY` | Clave secreta de Django | clave de desarrollo |
+| `DEBUG` | `True` o `False` | `True` |
+| `ALLOWED_HOSTS` | Hosts permitidos, separados por coma | `localhost,127.0.0.1` |
+| `DATABASE_URL` | URL de PostgreSQL (Neon) | SQLite local |
+| `CORS_ALLOWED_ORIGINS` | Orígenes del frontend permitidos | `http://localhost:4200` |
+| `CSRF_TRUSTED_ORIGINS` | Orígenes de confianza para el admin | `http://localhost:4200` |
+
+Para probar con Neon, exporta la URL en tu terminal antes de correr `migrate`:
+
+    export DATABASE_URL="postgresql://usuario:clave@host/bd?sslmode=require"
+
+> Nunca guardes la URL real en un archivo del repositorio.
 
 ### Frontend (Angular)
 
@@ -284,3 +301,4 @@ Abre <http://localhost:4200>. Necesitas el backend corriendo para ver datos.
 - Milestones: <https://github.com/ElZapata12/telas-trejo/milestones>
 - App en Vercel: _pendiente (#8)_
 - API en Render: _pendiente (#7)_
+
