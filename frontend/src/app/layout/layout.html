@@ -1,0 +1,109 @@
+<div class="flex-1 min-w-0">
+<aside
+    [class.hidden]="!menuAbierto()"
+    [class.block]="menuAbierto()"
+    class="w-64 bg-slate-900 text-slate-100 md:block"
+    >
+    <nav class="flex flex-col gap-1 p-3">
+    <a
+        routerLink="/resumen"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Resumen Operativo
+    </a>
+    <a
+        routerLink="/punto-venta"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Punto de Venta
+    </a>
+    <a
+        routerLink="/pedidos"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Pedidos
+    </a>
+    <a
+        routerLink="/clientes"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Clientes
+    </a>
+    <a
+        routerLink="/rastreo"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Rastreo
+    </a>
+    <a
+        routerLink="/finanzas"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Finanzas
+    </a>
+    <a
+        routerLink="/recibos"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Recibos
+    </a>
+    <a
+        routerLink="/inventario"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Inventario
+    </a>
+    <a
+        routerLink="/recuperar-ticket"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Recuperar el Ticket
+    </a>
+    <a
+        routerLink="/configuracion"
+        routerLinkActive="bg-slate-700 font-semibold"
+        (click)="cerrarMenu()"
+        class="px-3 py-2 rounded hover:bg-slate-800"
+    >
+        Configuración
+    </a>
+
+    </nav>
+</aside>
+<div  class="flex-1 min-w-0">
+    <header class="flex items-center justify-between p-4 border-b">
+        <app-indicador-conexion />
+        <app-avisos />
+        <button
+            type="button"
+            (click)="alternarMenu()"
+            class="md:hidden px-3 py-2 rounded border"
+        >
+            ☰
+        </button>
+
+    </header>
+
+    <main class="p-4">
+        <router-outlet/>
+    </main>
+</div>
+</div>
