@@ -38,6 +38,8 @@ CSRF_TRUSTED_ORIGINS = lista('CSRF_TRUSTED_ORIGINS', 'http://localhost:4200')
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +51,13 @@ INSTALLED_APPS = [
     'corsheaders',
     'tienda',
 ]
+
+ASGI_APPLICATION='config.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
