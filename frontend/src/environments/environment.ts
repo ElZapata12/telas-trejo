@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://<api>.onrender.com/api',
-    wsUrl: 'wss://<api>.onrender.com/ws/notificaciones/',
+    apiUrl: 'https://telas-trejo-api.onrender.com/api',
+    wsUrl: 'wss://telas-trejo-api.onrender.com/ws/notificaciones/',
 };
