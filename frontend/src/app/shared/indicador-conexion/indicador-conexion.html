@@ -1,1 +1,13 @@
-<p>indicador-conexion works!</p>
+<span class="flex items-center gap-2 text-sm">
+  @switch (ws.estado()) {
+    @case ('conectado') {
+      <span class="h-3 w-3 rounded-full bg-green-500"></span> Conectado
+    }
+    @case ('reconectando') {
+      <span class="h-3 w-3 rounded-full bg-yellow-400"></span> Reconectando…
+    }
+    @default {
+      <span class="h-3 w-3 rounded-full bg-red-500"></span> Sin conexión
+    }
+  }
+</span>

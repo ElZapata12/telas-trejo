@@ -1,1 +1,8 @@
-<p>avisos works!</p>
+@if (aviso(); as texto) {
+  <div
+    role="status"
+    class="fixed top-4 right-4 z-50 rounded bg-slate-900 px-4 py-3 text-sm text-white shadow-lg"
+  >
+    {{ texto }}
+  </div>
+}
