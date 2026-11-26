@@ -1,73 +1,89 @@
 import { Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment.development';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-@Injectable({ providedIn: 'root'})
+export type EstadoConexion = 'conectado' | 'reconectando' | 'desconectado';
 
-export class WebSocketService{
-    private socket: WebSocket | null = null;
-    private cierreManual = false;
-    private estadoInterno=signal<EstadoConexion>('desconectado');
-    private busInterno= new Subject<MensajeWs>();
-    readonly estado = this.estadoInterno.asReadonly();
-    readonly mensajes$=this.busInterno.asObservable();
-
-    conectar(): void{
-          if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
-  return;
+export interface MensajeWs {
+  tipo: string;
+  datos: any;
 }
-this.cierreManual = false;
 
-        const conexion = new WebSocket(environment.wsUrl);
-        this.socket = conexion;
+@Injectable({ providedIn: 'root' })
+export class WebSocketService {
+  private socket: WebSocket | null = null;
+  private cierreManual = false;
+  private reintento: ReturnType<typeof setTimeout> | null = null;
 
-       
+  private readonly estadoInterno = signal<EstadoConexion>('desconectado');
+  private readonly busInterno = new Subject<MensajeWs>();
 
-        conexion.onopen=()=>{
-            this.estadoInterno.set('conectado');
-        };
-        conexion.onerror = (err)=> console.error("Error en la conexion:", err);
+  readonly estado = this.estadoInterno.asReadonly();
+  readonly mensajes$ = this.busInterno.asObservable();
 
-       
-         conexion.onmessage = (evento)=>{
-        try{
-            const payload = JSON.parse(evento.data);
-            this.busInterno.next(payload)
-        }catch (err){
-            console.error('Json ivalido:', err)
-        }
+  conectar(): void {
+    if (
+      this.socket &&
+      (this.socket.readyState === WebSocket.OPEN ||
+        this.socket.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
+    this.cierreManual = false;
+    this.cancelarReintento();
+
+    const conexion = new WebSocket(environment.wsUrl);
+    this.socket = conexion;
+
+    conexion.onopen = () => {
+      this.estadoInterno.set('conectado');
     };
+
+    conexion.onmessage = (evento) => {
+      try {
+        this.busInterno.next(JSON.parse(evento.data));
+      } catch (err) {
+        console.error('JSON inválido:', err);
+      }
+    };
+
+    conexion.onerror = (err) => {
+      console.error('Error en la conexión:', err);
+    };
+
     conexion.onclose = () => {
-        if (!this.cierreManual){
-this.estadoInterno.set('reconectando');
-        setTimeout(() => {
-            this.conectar();
-        }, 3000);
-        }else{
-            this.estadoInterno.set('desconectado');
-        }
-    
-        
+      if (this.socket !== conexion) return;
+
+      if (this.cierreManual) {
+        this.estadoInterno.set('desconectado');
+        return;
+      }
+      this.estadoInterno.set('reconectando');
+      this.reintento = setTimeout(() => {
+        this.reintento = null;
+        this.conectar();
+      }, 3000);
     };
+  }
 
-   
+  enviar(mensaje: MensajeWs): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(mensaje));
     }
-    enviar(mensaje: MensajeWs):void{
-        if (this.socket && this.socket.readyState === WebSocket.OPEN){
-            this.socket.send(JSON.stringify(mensaje))
-        }
-        
-    }
-    desconectar():void{
-        this.cierreManual = true;
-        this.socket?.close();
-        this.estadoInterno.set('desconectado')
-    }
-}
+  }
 
-export type EstadoConexion='conectado' | 'reconectando' | 'desconectado';
+  desconectar(): void {
+    this.cierreManual = true;
+    this.cancelarReintento();
+    this.socket?.close();
+    this.socket = null;
+    this.estadoInterno.set('desconectado');
+  }
 
-export interface MensajeWs{
-tipo: string;
-datos: any;
+  private cancelarReintento(): void {
+    if (this.reintento) {
+      clearTimeout(this.reintento);
+      this.reintento = null;
+    }
+  }
 }
