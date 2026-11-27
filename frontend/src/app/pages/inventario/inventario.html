@@ -1,1 +1,84 @@
-<p>inventario works!</p>
+<section class="p-4 md:p-6 space-y-6">
+  <h1 class="text-2xl font-bold text-slate-800">Inventario Yucatán</h1>
+
+  @if (error()) {
+    <div class="rounded border border-red-300 bg-red-50 p-3 text-red-700">
+      {{ error() }}
+    </div>
+  }
+
+  @if (cargando()) {
+    <p class="text-slate-500">Cargando inventario…</p>
+  } @else {
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div class="rounded-lg bg-white p-4 shadow">
+        <p class="text-sm text-slate-500">Referencias activas</p>
+        <p class="text-2xl font-bold">{{ referencias() }}</p>
+      </div>
+      <div class="rounded-lg bg-white p-4 shadow">
+        <p class="text-sm text-slate-500">Rollos disponibles</p>
+        <p class="text-2xl font-bold">{{ disponibles() }}</p>
+      </div>
+      <div class="rounded-lg bg-white p-4 shadow">
+        <p class="text-sm text-slate-500">Rollos apartados</p>
+        <p class="text-2xl font-bold">{{ apartados() }}</p>
+      </div>
+      <div class="rounded-lg bg-white p-4 shadow">
+        <p class="text-sm text-slate-500">Valor estimado</p>
+        <p class="text-2xl font-bold">{{ valorEstimado() | currency: 'MXN' : 'symbol-narrow' : '1.0-0' }}</p>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg bg-white shadow">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-100 text-left text-slate-600">
+          <tr>
+            <th class="px-4 py-2">Color</th>
+            <th class="px-4 py-2">Tela</th>
+            <th class="px-4 py-2">Especificaciones</th>
+            <th class="px-4 py-2 text-right">Precio por rollo</th>
+            <th class="px-4 py-2 text-center">Disponible</th>
+            <th class="px-4 py-2 text-center">Apartado</th>
+            <th class="px-4 py-2 text-center">Ajuste</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (tela of telas(); track tela.id) {
+            <tr class="border-t">
+              <td class="px-4 py-2">
+                <span class="inline-block h-6 w-6 rounded border" [style.background-color]="tela.color"></span>
+              </td>
+              <td class="px-4 py-2 font-medium">{{ tela.nombre }}</td>
+              <td class="px-4 py-2 text-slate-600">
+                {{ tela.metros_por_rollo }} m · {{ tela.ancho_m }} m de ancho · {{ tela.peso_kg }} kg
+              </td>
+              <td class="px-4 py-2 text-right">{{ tela.precio_rollo | currency: 'MXN' : 'symbol-narrow' : '1.0-0' }}</td>
+              <td class="px-4 py-2 text-center font-semibold">{{ tela.stock_disponible }}</td>
+              <td class="px-4 py-2 text-center">{{ tela.stock_apartado }}</td>
+              <td class="px-4 py-2">
+                <div class="flex justify-center gap-2">
+                  <button
+                    type="button"
+                    (click)="ajustar(tela, -1)"
+                    [disabled]="tela.stock_disponible === 0 || guardandoId() === tela.id"
+                    class="h-8 w-8 rounded bg-slate-200 font-bold hover:bg-slate-300 disabled:opacity-40"
+                  >−</button>
+                  <button
+                    type="button"
+                    (click)="ajustar(tela, 1)"
+                    [disabled]="guardandoId() === tela.id"
+                    class="h-8 w-8 rounded bg-slate-200 font-bold hover:bg-slate-300 disabled:opacity-40"
+                  >+</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="px-4 py-6 text-center text-slate-500">No hay telas registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
